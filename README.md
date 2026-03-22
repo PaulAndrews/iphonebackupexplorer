@@ -1,47 +1,88 @@
-# iPhone Backup Explorer
+# iphone backup explorer
 
-Local web utility for browsing iTunes/iPhone backup folders on Windows, previewing image/PDF files, and extracting selected files.
+Local iTunes/iPhone backup explorer with preview and extraction.
 
-## What it does
+## Features
 
-- Opens a backup directory containing `Manifest.db` (plus `Manifest.plist`/`Info.plist` when available).
-- Reads `Manifest.db` and reconstructs a file tree using `domain + relativePath`.
-- Offers an **App-centric** tree view that groups `AppDomain*`, `AppDomainPlugin*`, `AppDomainGroup*`, and matching Mobile Documents containers by app identifier.
-- Includes directory-name search in the tree: partial matches keep directory ancestors for context and include full descendants for each match.
-- Resolves each file from hashed backup storage (`<backup>/<first2>/<fileID>`, with fallback checks).
-- Previews image/PDF files inline, parses XML/binary plist files into JSON, and falls back to text preview for other file types.
-- Exports selected files to a target folder while preserving original logical paths (`domain/relativePath`).
+- Opens a backup directory containing `Manifest.db` (plus `Manifest.plist` and `Info.plist` when available).
+- Reconstructs a file tree from `domain + relativePath`.
+- Supports **App-centric**, **Camera**, **Files**, and **Raw domains** views.
+- Previews image/PDF/media files inline, parses plist files, and falls back to text previews.
+- Extracts selected files while preserving logical backup paths.
 
 ## Requirements
 
-- Node.js 18+ recommended.
-- A local iPhone backup folder available on disk.
+- Node.js 18+.
+- Windows for folder-picker UX (`/api/select-*` uses the Windows dialog).
 
-## Run
+## Security Model
+
+- The backend is loopback-only (`127.0.0.1`) and rejects non-local requests.
+- This applies to both web mode and Electron mode.
+
+## Run As Local Web App
+
+1. Install dependencies:
 
 ```bash
 npm install
-npm start
 ```
 
-Then open:
+2. Start the web server:
+
+```bash
+npm run start:web
+```
+
+3. Open:
 
 ```text
 http://127.0.0.1:3000
 ```
 
+## Run As Electron App (Dev)
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. If native module binaries need a rebuild for your Electron version:
+
+```bash
+npm run rebuild:electron
+```
+
+3. Start Electron:
+
+```bash
+npm start
+```
+
+Notes:
+- Electron starts the Express backend in-process on a random loopback port.
+- The renderer loads `http://127.0.0.1:<randomPort>`.
+
+## Build Windows Installer / Executable
+
+```bash
+npm run dist:win
+```
+
+Build output goes to `release/`.
+Run the installer generated at:
+- `release/iphone-backup-explorer-<version>-x64.exe`
+
 ## Usage
 
-1. Click **Open Backup**, select a folder in the picker (defaulting to your iTunes backup location), and load it.
-2. Use **Tree view** to switch between **App-centric**, **Camera**, **Files**, and **Raw domains**.
-3. Browse the tree and tick files to extract.
-4. Click a file to preview.
-5. Enter an output folder and click **Extract Selected**.
+1. Click **Open Backup** and choose a backup folder.
+2. Switch tree view mode as needed.
+3. Browse and select files.
+4. Click a file to preview it.
+5. Choose an output folder and click **Extract Selected**.
 
 ## Notes
 
-- This tool relies on `Manifest.db` schema used by modern iTunes backups.
-- Encrypted backups are detected, but this app does not implement keybag decryption. Some previews/exports may fail for encrypted content.
-- For very large backups, the initial tree load may take a bit of time.
-- The backend is loopback-only (`127.0.0.1`) and rejects non-local requests.
-- For Electron packaging, prefer loading `http://127.0.0.1:<port>` in the renderer so frontend and backend stay same-origin.
+- Encrypted backups are detected, but keybag decryption is not implemented.
+- Large backups may take some time to index on initial load.

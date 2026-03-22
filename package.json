@@ -2,14 +2,19 @@
   "name": "backupexplorer",
   "version": "1.0.0",
   "description": "Local iTunes/iPhone backup explorer with preview and extraction",
-  "main": "server.js",
+  "main": "electron/main.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js",
+    "start": "electron .",
+    "dev": "electron .",
+    "start:web": "node server.js",
+    "dev:web": "node server.js",
+    "rebuild:electron": "electron-rebuild -f -w sqlite3",
+    "dist:win": "electron-builder --win nsis",
+    "postinstall": "electron-builder install-app-deps",
     "test": "echo \"No tests configured\""
   },
   "keywords": [],
-  "author": "",
+  "author": "Andrews Technology",
   "license": "ISC",
   "type": "module",
   "dependencies": {
@@ -20,5 +25,42 @@
     "plist": "^3.1.0",
     "sqlite": "^5.1.1",
     "sqlite3": "^6.0.1"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^4.0.3",
+    "electron": "^41.0.3",
+    "electron-builder": "^26.8.1"
+  },
+  "build": {
+    "appId": "uk.co.andrewstech.iphone-backup-explorer",
+    "productName": "iphone backup explorer",
+    "artifactName": "iphone-backup-explorer-${version}-${arch}.${ext}",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "electron/**/*",
+      "public/**/*",
+      "src/**/*",
+      "server.js",
+      "package.json"
+    ],
+    "npmRebuild": false,
+    "asar": true,
+    "win": {
+      "signAndEditExecutable": false,
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   }
 }
