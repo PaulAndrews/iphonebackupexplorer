@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>iPhone Backup Explorer</title>
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="topbar-main">
+          <h1>iPhone Backup Explorer</h1>
+          <p>Open a local backup folder, browse files, preview images/PDFs, and extract selected files.</p>
+        </div>
+        <div class="topbar-actions">
+          <button id="loadBackupBtn" type="button">Open Backup</button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="panel left-tabs-panel">
+          <div class="tabs-bar" role="tablist" aria-label="Left panel tabs">
+            <button
+              id="metadataTabBtn"
+              class="tab-button active"
+              type="button"
+              role="tab"
+              aria-selected="true"
+              aria-controls="metadataTabPanel"
+            >
+              Backup Metadata
+            </button>
+            <button
+              id="fileTreeTabBtn"
+              class="tab-button"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="fileTreeTabPanel"
+            >
+              File Tree
+            </button>
+          </div>
+
+          <section id="metadataTabPanel" class="tab-panel active" role="tabpanel" aria-labelledby="metadataTabBtn">
+            <div class="meta-container">
+              <div id="backupMeta" class="meta">
+                <div class="placeholder">No backup metadata loaded.</div>
+              </div>
+            </div>
+          </section>
+
+          <section id="fileTreeTabPanel" class="tab-panel tree-panel" role="tabpanel" aria-labelledby="fileTreeTabBtn">
+            <div class="tree-search">
+              <select id="viewMode" aria-label="Tree view mode">
+                <option value="apps" selected>App-centric</option>
+                <option value="camera">Camera</option>
+                <option value="files">Files</option>
+                <option value="raw">Raw domains</option>
+              </select>
+              <select id="treeSearchScope" aria-label="Search scope">
+                <option value="directories" selected>Directories</option>
+                <option value="all">All names</option>
+              </select>
+              <div class="tree-search-input-wrap">
+                <input
+                  id="treeSearch"
+                  type="text"
+                  placeholder="Search (partial match)"
+                  spellcheck="false"
+                />
+                <button
+                  id="clearTreeSearchBtn"
+                  type="button"
+                  class="clear-search-btn"
+                  aria-label="Clear search"
+                  title="Clear search"
+                  hidden
+                >
+                  <span aria-hidden="true">x</span>
+                </button>
+              </div>
+            </div>
+            <div id="treeContainer" class="tree-container">
+              <div class="placeholder">Load a backup folder to display file tree.</div>
+            </div>
+            <div class="tree-footer-row">
+              <div id="selectionSummary" class="summary">Selected: 0</div>
+              <div class="tree-actions">
+                <button id="selectAllBtn" type="button">Select All</button>
+                <button id="clearSelectionBtn" type="button">Clear</button>
+              </div>
+            </div>
+          </section>
+        </section>
+
+        <section class="panel preview-panel">
+          <div class="panel-heading">
+            <h2>Preview</h2>
+            <div id="previewHeaderActions" class="preview-heading-actions"></div>
+          </div>
+          <div id="fileMeta" class="summary">No file selected.</div>
+          <div id="previewContainer" class="preview-container">
+            <div class="placeholder">Click a file to preview it here.</div>
+          </div>
+        </section>
+      </main>
+
+      <section class="panel extract-panel">
+        <div class="form-row">
+          <label for="targetDir">Extract selected to folder</label>
+          <div class="input-group">
+            <input id="targetDir" type="text" placeholder="C:\Users\<you>\Downloads" spellcheck="false" />
+            <button id="selectTargetDirBtn" type="button">Select Directory</button>
+            <button id="extractBtn" type="button">Extract Selected</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel status-panel">
+        <div class="panel-heading">
+          <h2>Status</h2>
+        </div>
+        <div id="statusMessage" class="status-log"></div>
+      </section>
+    </div>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
