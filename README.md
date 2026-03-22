@@ -2,6 +2,8 @@
 
 Local iTunes/iPhone backup explorer with preview and extraction.
 
+![](./docs/Screenshot.png)
+
 ## Features
 
 - Opens a backup directory containing `Manifest.db` (plus `Manifest.plist` and `Info.plist` when available).
